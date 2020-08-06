@@ -23,12 +23,36 @@ console.log('Testing the connection to the database...');
   try {
     // Test the connection to the database
     console.log('Connection to the database successful!');
+    await sequelize.authenticate();
 
     // Sync the models
     console.log('Synchronizing the models with the database...');
+    await sequelize.sync({force: true });
 
     // Add People to the Database
     console.log('Adding people to the database...');
+    const peopleInstances = await Promise.all([
+      Person.create({
+        firstName: 'Brad',
+        lastName: 'Bird',
+      }),
+      Person.create({
+        firstName: 'Vin',
+        lastName: 'Diesel',
+      }),
+      Person.create({
+        firstName: 'Eli',
+        lastName: 'Marienthal',
+      }),
+      Person.create({
+        firstName: 'Craig T.',
+        lastName: 'Nelson',
+      }),
+      Person.create({
+        firstName: 'Holly',
+        lastName: 'Hunter',
+      }),
+    ]);
   
     // Update the global variables for the people instances
 
