@@ -53,15 +53,48 @@ console.log('Testing the connection to the database...');
         lastName: 'Hunter',
       }),
     ]);
+    console.log(JSON.stringify(peopleInstances, null, 2));
   
     // Update the global variables for the people instances
+    [bradBird, vinDiesel, eliMarienthal, craigTNelson, hollyHunter] = peopleInstances;
 
     // Add Movies to the Database
     console.log('Adding movies to the database...');
+    const movieInstances = await Promise.all([ 
+      Movie.create({
+        title: 'The Iron Giant',
+        releaseYear: 1999,
+        directorPersonId: bradBird.id,
+      }),
+      Movie.create({
+        title: 'The Incredibles',
+        releaseYear: 2004,
+        directorPersonId: bradBird.id,
+      }),
+    ]);
+    console.log(JSON.stringify(movieInstances, null, 2));
 
     // Retrieve movies
+    const movies = await Movie.findAll({
+      include: [
+        {
+          model: Person,
+          as: 'director',
+        },
+      ],
+    });
+    console.log(movies.map(movie => movie.get({ plain: true })));
 
     // Retrieve people
+    const people = await Person.findAll({
+      include: [
+        {
+          model: Movie,
+          as: 'director',
+        },
+      ],
+    });
+    console.log(people.map(person => person.get({ plain: true })));
 
     process.exit();
 
